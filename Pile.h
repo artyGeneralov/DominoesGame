@@ -12,6 +12,7 @@ class Pile
 
     public:
         Pile();
+        Pile(const Pile&);
         ~Pile();
         Stone stoneByIndex(int);
         // TODO:: MAKE FUCKING COPY CONSTRUCTOR AND OP=
@@ -20,13 +21,13 @@ class Pile
         void fillPile();
         void shufflePile();
         void addStone(Stone, Stone::side);
-        int getPileSize(){return this->pileSize;}
+        const int getPileSize(){return this->pileSize;}
 
         bool isEmpty();
         
         Stone* getStonesArray();
         Stone removeStone(int);
-        Pile& operator=(Pile&);
+        Pile operator=(Pile);
 };
 
 #endif

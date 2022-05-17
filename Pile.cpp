@@ -3,7 +3,7 @@
 
 
 #include "Pile.h"
-#include "Stone.cpp"
+#include "Stone.h"
 #include <cassert>
 #include <iostream>
 #include <time.h>
@@ -13,6 +13,28 @@ Pile::Pile()
 {
     this->stones_array = new Stone[0];
     this->pileSize = 0;
+}
+
+
+
+/*
+1.) Command: a.op=(b) <= a=b
+2.) copy constructor invoked to enter op= function
+3.) ob in op= function is a copy of b.
+4.) op= function is a part of a, so a has a "p" char* field
+5.) strcpy the p of ob to the p of p.
+6.) function returns so ob is destroyed, but its a copy so its ok.
+
+
+*/
+
+
+Pile::Pile(const Pile& pile)
+{
+    this->stones_array = new Stone[pile.pileSize];
+    for (int i = 0; i < pile.pileSize; i++)
+        stones_array[i] = *(new Stone(pile.stones_array[i].getLeft(), pile.stones_array[i].getRight()));
+    this->pileSize = pile.pileSize;
 }
 
 Pile::~Pile()
@@ -173,15 +195,11 @@ Stone* Pile::getStonesArray()
     return newStonesArr;
 }
 
-Pile& Pile::operator=(Pile& p)
+Pile Pile::operator=(Pile p)
 {
-    if(&p != this)
-    {
-        delete[] this->stones_array;
-        this->pileSize = p.getPileSize();
-        this->stones_array = p.getStonesArray();
-    }
-
+    delete[] this->stones_array;
+    this->pileSize = p.getPileSize();
+    this->stones_array = p.getStonesArray();
     return *this;
 }
 

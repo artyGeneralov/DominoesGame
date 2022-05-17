@@ -1,6 +1,6 @@
-#include "Pile.cpp"
+#include "Pile.h"
 #include "Game.h"
-#include "Player.cpp"
+#include "Player.h"
 #include <iostream>
 using namespace std;
 

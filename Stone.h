@@ -3,10 +3,11 @@
 
 class Stone{
     private:
-        int right, left; 
+        int right=-1, left=-1; 
 
     public:
-        Stone(){}; // Empty Constructor
+        Stone() {};
+ // Empty Constructor
         Stone(int, int);
         int getRight(){return right;}
         int getLeft(){return left;}
