@@ -7,8 +7,8 @@ using namespace std;
 
 
 Stone::Stone(int left, int right){
-    this->right = right;
     this->left = left;
+    this->right = right;
 }
 
 void Stone::rotateStone()
@@ -21,10 +21,8 @@ void Stone::rotateStone()
 
 const bool Stone::compareStones(Stone s2)
 {
-    return (this->right == s2.getRight()) ||
-            (this->right == s2.getLeft()) ||
-            (this->left == s2.getRight()) ||
-            (this->left == s2.getLeft());
+    return  (this->right == s2.getRight() && this->left == s2.getLeft()) ||
+            (this->left == s2.getRight() && this->right == s2.getLeft());
 }
 
 const void Stone::printOpen()

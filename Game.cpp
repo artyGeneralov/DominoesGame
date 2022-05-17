@@ -6,17 +6,23 @@ using namespace std;
 
 Game::Game()
 {
-    this->humanPlayer = *(new Player("HUMAN", true));
-    this->computerPlayer = *(new Player("COMPUTER", false));
+    humanPlayer = new Player("HUMAN", true);
 
-    this->fullDeck = *(new Pile());
-    this->fullDeck.fillPile();
-    this->fullDeck.shufflePile();
+    computerPlayer = new Player("COMPUTER", false);
 
-    this->tablePile = *(new Pile());
+    fullDeck = new Pile();
+    fullDeck->fillPile();
+    fullDeck->shufflePile();
 
-    startUpPlayerHand(humanPlayer);
-    startUpPlayerHand(computerPlayer);
+    tablePile = new Pile();
+
+    startUpPlayerHand(*humanPlayer);
+    startUpPlayerHand(*computerPlayer);
+}
+
+Game::~Game()
+{
+    delete[] humanPlayer, computerPlayer, fullDeck, tablePile;
 }
 
 bool Game::hasLegalMove(Player p)
@@ -33,25 +39,25 @@ bool Game::hasLegalMove(Player p)
 void Game::printBoard()
 {
     cout << "K U P A\nstart-->";
-    fullDeck.printClosed();
+    fullDeck->printClosed();
     cout << "<--end\n";
 
     // Computer Side:
-    cout << "******" << computerPlayer.getPlayerName() << "******\n";
-    computerPlayer.getPlayerPile().printClosed();
-    for(int i = 0; i < computerPlayer.getPileSize(); i++)
+    cout << "******" << computerPlayer->getPlayerName() << "******\n";
+    computerPlayer->getPlayerPile().printClosed();
+    for(int i = 0; i < computerPlayer->getPileSize(); i++)
         cout << " --- " << i << " --- ";
     
 
     // Main Board:
     cout << "\n\n";
-    tablePile.printOpen();
+    tablePile->printOpen();
     cout << "\n\n";
 
     // Player Side:
-    cout << "******" << humanPlayer.getPlayerName() << "******\n";
-    humanPlayer.getPlayerPile().printOpen();
-    for(int i = 0; i < humanPlayer.getPileSize(); i++)
+    cout << "******" << humanPlayer->getPlayerName() << "******\n";
+    humanPlayer->getPlayerPile().printOpen();
+    for(int i = 0; i < humanPlayer->getPileSize(); i++)
         cout << " --- " << i << " --- ";
     
 }
@@ -59,17 +65,15 @@ void Game::printBoard()
 void Game::startUpPlayerHand(Player p)
 {
     Pile pile = *(new Pile());
-    for(int i = 0; i < 7; i++){
-        pile.addStone(fullDeck.removeStone(0), Stone::Right);
-    }
-    
+    for(int i = 0; i < 7; i++)
+        pile.addStone(fullDeck->removeStone(0), Stone::Right);
 }
 
 bool Game::isOver()
 {
-    if(this->humanPlayer.getPlayerPile().isEmpty() ||
-        this->computerPlayer.getPlayerPile().isEmpty() || 
-        (!hasLegalMove(this->humanPlayer) && !hasLegalMove(this->computerPlayer) && fullDeck.isEmpty()))
+    if(humanPlayer->getPlayerPile().isEmpty() ||
+        computerPlayer->getPlayerPile().isEmpty() ||
+        (!hasLegalMove(*humanPlayer) && !hasLegalMove(*computerPlayer) && fullDeck->isEmpty()))
             return true;
     return false;
 }
@@ -77,6 +81,10 @@ bool Game::isOver()
 
 int main()
 {
-    Game game;
-    game.printBoard();
+    //Game game;
+    //game.printBoard();
+    Pile p;
+    p.fillPile();
+    p.shufflePile();
+    p.printOpen();
 }

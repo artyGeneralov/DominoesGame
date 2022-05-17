@@ -13,9 +13,8 @@ class Pile
     public:
         Pile();
         Pile(const Pile&);
-        ~Pile();
+        ~Pile() {delete[] stones_array;}
         Stone stoneByIndex(int);
-        // TODO:: MAKE FUCKING COPY CONSTRUCTOR AND OP=
         const void printOpen();
         const void printClosed();
         void fillPile();

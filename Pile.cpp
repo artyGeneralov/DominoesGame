@@ -11,36 +11,20 @@ using namespace std;
 
 Pile::Pile()
 {
-    this->stones_array = new Stone[0];
-    this->pileSize = 0;
+    stones_array = new Stone[0];
+    pileSize = 0;
 }
-
-
-
-/*
-1.) Command: a.op=(b) <= a=b
-2.) copy constructor invoked to enter op= function
-3.) ob in op= function is a copy of b.
-4.) op= function is a part of a, so a has a "p" char* field
-5.) strcpy the p of ob to the p of p.
-6.) function returns so ob is destroyed, but its a copy so its ok.
-
-
-*/
 
 
 Pile::Pile(const Pile& pile)
 {
-    this->stones_array = new Stone[pile.pileSize];
+    
+    stones_array = new Stone[pile.pileSize];
     for (int i = 0; i < pile.pileSize; i++)
         stones_array[i] = *(new Stone(pile.stones_array[i].getLeft(), pile.stones_array[i].getRight()));
     this->pileSize = pile.pileSize;
 }
 
-Pile::~Pile()
-{
-    delete[] stones_array;
-}
 
 Stone Pile::stoneByIndex(int index)
 {
@@ -68,21 +52,17 @@ const void Pile::printClosed()
 {
     for(int i = 0; i < pileSize; i++)
         stones_array[i].printClosed();
-
 }
 
 void Pile::fillPile()
 {
     const int MAX_SIZE = 6;
     for(int i = 0; i <=MAX_SIZE; i++)
-    {
-
         for(int j = 0; j <= i; j++)
         {
-            Stone newStone(i,j);
-            addStone(newStone, Stone::Right);
+            Stone* newStone = new Stone(i,j);
+            addStone(*newStone, Stone::Right);
         }
-    }
 }
 
 void Pile::shufflePile()
@@ -115,7 +95,7 @@ void Pile::shufflePile()
                 while( j > 0 && this->stones_array[j].getLeft() == -1)
                     j--;
             }
-            newStoneArr[i] = stones_array[j];
+            newStoneArr[i] = *new Stone(stones_array[j].getLeft(), stones_array[j].getRight());
             stones_array[j] = *(new Stone(-1,-1));
         }
     }
@@ -131,9 +111,10 @@ void Pile::addStone(Stone stoneToAdd, Stone::side side)
         cout << "Can't add additional stones!" << endl;
         exit(0);
     }
-    pileSize++;
-    Stone* newStoneArr = new Stone[pileSize + 1];
-    assert(newStoneArr);
+
+    pileSize++;         // Incrementing the pile size off the get go
+    Stone* newStoneArr = new Stone[pileSize];
+    assert(newStoneArr!=0);
     int i = 0;
     if(side == Stone::Left)
     {
@@ -141,14 +122,12 @@ void Pile::addStone(Stone stoneToAdd, Stone::side side)
         newStoneArr[0] = stoneToAdd;
         i++;  
         for(; i < pileSize; i++)
-            //*(newStoneArr+i) -> Stone
             newStoneArr[i] =*(new Stone(stones_array[i-1].getLeft(), stones_array[i-1].getRight()));
     }
     else
     {
         // Add to rigth side:
         for(; i < pileSize - 1; i++){
-        //*(newStoneArr+i) -> Stone
             newStoneArr[i] =*(new Stone(stones_array[i].getLeft(), stones_array[i].getRight()));
         }
         newStoneArr[i] = stoneToAdd;
@@ -170,7 +149,7 @@ Stone Pile::removeStone(int index)
     
     Stone removed = *(new Stone(stones_array[index].getLeft(), stones_array[index].getRight()));
     Stone* newStoneArr = new Stone[pileSize - 1];
-    assert(newStoneArr);
+    assert(newStoneArr!= 0);
 
     int j = 0;
     for(int i = 0; i < pileSize - 1; i++, j++)

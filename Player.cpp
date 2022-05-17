@@ -23,22 +23,22 @@ Player::Player(const Player& player)
     // copy pile size
     this->pileSize = player.pileSize;
     // copy pile
-    this->playerPile = *(new Pile(player.playerPile));
+    this->playerPile = new Pile(*player.playerPile);
     // copy isHuman
     this->isHuman = player.isHuman;
 }
 
 void Player::setName(const char* name){
-    this->name = new char(strlen(name)+1);
-    assert(name);
+    name = new char(strlen(name)+1);
+    assert(name != 0);
     strcpy(this->name, name);
-    *(this->name + sizeof(char) * strlen(this->name)) = '\0';
+    this->name[strlen(name)] = '\0';
 }
 
 
 const Stone Player::removeStone(const int index)
 {
-    Stone removedStone = this->playerPile.removeStone(index);
+    Stone removedStone = playerPile->removeStone(index);
     this->pileSize--;
     return removedStone;
 }
@@ -46,8 +46,8 @@ const Stone Player::removeStone(const int index)
 
 void Player::addStone(Stone stoneToAdd)
 {
-    this->playerPile.addStone(stoneToAdd, Stone::Right);
-    this->pileSize++;
+    playerPile->addStone(stoneToAdd, Stone::Right);
+    pileSize++;
 }
 
 
@@ -69,7 +69,7 @@ Player Player::operator=(Player pl)
 
 Pile Player::getPlayerPile()
 {
-    Pile newPile = this->playerPile;
+    Pile newPile(*playerPile);
     return newPile;
 }
 

@@ -4,8 +4,10 @@
 
 class Game{
     private:
-        Player humanPlayer, computerPlayer;
-        Pile fullDeck, tablePile;
+        Player* humanPlayer;
+        Player* computerPlayer;
+        Pile* fullDeck;
+        Pile* tablePile;
         int leftEdge, rightEdge;
 
         bool isOver();  // Check whether a victory or loss condition has been achieved
@@ -14,6 +16,7 @@ class Game{
 
     public:
         Game();
+        ~Game();
         void printBoard();
         void runGame();
 
