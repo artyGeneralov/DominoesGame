@@ -66,7 +66,7 @@ void Player::setName(const char* name) {
 
 // Actions:
 // Removes stone from playerPile by @index
-const Stone Player::removeStone(const int index){
+ Stone Player::removeStone(const int index){
     Stone removedStone = playerPile->removeStone(index);
     pileSize--;
     return removedStone;

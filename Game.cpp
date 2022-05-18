@@ -2,6 +2,8 @@
 #include "Game.h"
 #include "Player.h"
 #include <iostream>
+#include <time.h>
+#include <stdlib.h>
 using namespace std;
 
 // C/D:
@@ -9,7 +11,9 @@ using namespace std;
 // Main constructor. Initializes a Human and Computer players
 Game::Game(const char* humanName)
 {
-    humanPlayer = new Player(humanName, true);
+    char* n = new char[strlen(humanName)];
+    strcpy(n, humanName);
+    humanPlayer = new Player("HUMAN", true);
 
     computerPlayer = new Player("COMPUTER", false);
 
@@ -36,18 +40,16 @@ Game::~Game()
         delete(computerPlayer);
 }
 
-
-
 // Printer:
 void Game::printBoard()
 {
-    cout << "K U P A\nstart-->";
+    cout << "B A N K:\nstart-->";
     bankPile->printClosed();
     cout << "<--end\n";
 
     // Computer Side:
     cout << "****** " << computerPlayer->getPlayerName() << " ******\n";
-    computerPlayer->getPlayerPile().printClosed();
+    computerPlayer->getPlayerPile().printClosed(); 
     cout << "\n";
     for(int i = 0; i < computerPlayer->getPlayerPile().getPileSize(); i++)
         cout << " - " << i+1 << " -  ";
@@ -73,23 +75,98 @@ void Game::runGame()
 {
     // 1.) check whose turn it is
     // first turn is whoever has a 6-6 and else its the player
-
-
-    // TEST:
-    printBoard();
-    for (int i = 0; i < 8; i++) {
-        humanTurn();
-        cout << "\n\n\n************************** " << "Left edge: " << leftEdge << "Right edge:" << rightEdge;
-        cout << "***********************\n\n\n";
-        
-        printBoard();
+    Stone sixStone(6, 6);
+    const int PLAYER = 1, COMP = 2;
+    int nextPlayer = PLAYER;         // default: player goes first
+    for (int i = 0; i < computerPlayer->getPileSize(); i++) {
+        if (sixStone.compareStones(computerPlayer->getPlayerPile().getStonesArray()[i]))
+            nextPlayer = COMP;      // Computer goes first
     }
     
+    cout << "\n*****GAME STARTS******\n\n";
+    printBoard();
+    // Print starting message:
+    if (nextPlayer == PLAYER)
+        cout << "\nYou start! Press Enter";
+    else
+        cout << "\nComputer Starts! Press Enter";
+    
+    cin.ignore();
 
+    system("CLS");
+    // Game Loop:
+    while (true) {
+        if (isOver())
+        {
+
+            break;
+        }
+        if (nextPlayer == PLAYER) {
+            humanTurn();
+            nextPlayer = COMP;
+            system("CLS");
+        }
+        else
+        {
+            computerTurn();          
+            nextPlayer = PLAYER;
+            cout << "@@ End of Computers turn.\n";
+        }
+        
+    }
+
+    // Calculate points, declare winner
+    endGame();
 }
 
 
 // Private helper methods:
+
+void Game::endGame() {
+    printBoard();
+    cout << "\n\n\n\n***********************************************************\n\n\t\t\tEND GAME\n\n***********************************************************\n";
+    
+    if (humanPlayer->getPileSize() < 1)
+    {
+        cout << "Congratulations, " << humanPlayer->getPlayerName() << "! You have won!\n";
+        return;
+    }
+    else if (computerPlayer->getPileSize() < 1)
+    {
+        cout << "Tough Luck, " << humanPlayer->getPlayerName() << "! You have Lost!    Computers victory!\n";
+        return;
+    }
+    else
+    {
+        int playerScore = 0;
+        int computerScore = 0;
+        cout << "\nHUMAN PILE : " << humanPlayer->getPileSize() << "COMP PILE: " << computerPlayer->getPileSize() << "\n\n";
+        for (int i = 0; i < humanPlayer->getPileSize(); i++)
+            playerScore += humanPlayer->getPlayerPile().getStonesArray()[i].getLeft() + humanPlayer->getPlayerPile().getStonesArray()[i].getRight();
+        for (int i = 0; i < humanPlayer->getPileSize(); i++)
+            computerScore += computerPlayer->getPlayerPile().getStonesArray()[i].getLeft() + computerPlayer->getPlayerPile().getStonesArray()[i].getRight();
+        
+        cout << "\nComputers Stones:\n";
+        computerPlayer->printPile();
+        cout << "\nYour Stones:\n";
+        humanPlayer->printPile();
+
+        cout << "\nYour Score: " << playerScore << "\tComputers Score: " << computerScore << "\n";
+        if (playerScore > computerScore) {
+            cout << "\nCongratulations, " << humanPlayer->getPlayerName() << "! You have won!\n";
+            return;
+        }
+        else if (playerScore < computerScore) {
+            cout << "\nTough Luck, " << humanPlayer->getPlayerName() << "! You have Lost!    Computers victory!\n";
+            return;
+        }
+        else {          // ==
+            cout << "\nIt's a Tie! Better luck next time!\n";
+            return;
+        }
+
+    }
+}
 
 // true if player @p has any legal moves, else false
 bool Game::hasLegalMove(Player p) {
@@ -135,6 +212,7 @@ void Game::computerTurn() {
     bool bankEmpty = bankPile->isEmpty();
     if (!hasLegal && !bankEmpty){
         computerPlayer->addStone(bankPile->removeStone(0));
+        cout << "\nComputer picked up a card from the bank\n";
         return;
     }
     else if (!hasLegal && bankEmpty) {
@@ -142,20 +220,79 @@ void Game::computerTurn() {
         return;
     }
 
-    int indexToPlay;
-    
-    // 
     // Find the best move:
+    
+    // search for double
+    for (int i = 0; i < computerPlayer->getPileSize(); i++) {
+        Stone currentStone = computerPlayer->getPlayerPile().getStonesArray()[i];
+        if (currentStone.getLeft() == currentStone.getRight() &&
+            isStoneLegal(currentStone))
+        {
+            // A double has been found and its corollating to one of the sides.
 
-    // Best move is double
-    // next best is the highest sum
+            // Note: if table not empty, no need to change edges because adding double doesnt change a thing!
+            if (currentStone.getLeft() == leftEdge)
+                tablePile->addStone(computerPlayer->removeStone(i), Stone::Left);
+            else
+                tablePile->addStone(computerPlayer->removeStone(i), Stone::Right);
 
+            // if table was empty (if this is the first stone):
+            if (tablePile->getPileSize() == 1)
+                leftEdge = rightEdge = currentStone.getLeft();
+
+            cout << "Computer played: ";
+            currentStone.printOpen();
+            cout << "   Computers turn ends.\n";
+            return;
+        }
+    }
+    
+    int highestSum = 0;
+    int highestIndex = 0;
+    Stone currentStone;
+    // search for highest sum
+    for (int i = 0; i < computerPlayer->getPileSize(); i++){
+        currentStone = computerPlayer->getPlayerPile().getStonesArray()[i];
+        // if current stone CAN'T be played, check the next stone
+        if(!isStoneLegal(currentStone))
+            continue;
+        int currentSum = currentStone.getLeft() + currentStone.getRight();
+        if (currentSum > highestSum)
+        {
+            highestSum = currentSum;
+            highestIndex = i;
+        }
+    }
+
+    currentStone = computerPlayer->getPlayerPile().getStonesArray()[highestIndex];
+    // play the highest sum stone
+    // check for rotation:
+    if (currentStone.getLeft() == leftEdge || currentStone.getRight() == rightEdge)
+        computerPlayer->getPlayerPile().getStoneArrayPtr()[highestIndex].rotateStone();
+    // add to correct side:
+        currentStone = computerPlayer->getPlayerPile().getStonesArray()[highestIndex]; // get the rotated stone this time
+
+        // add to left
+        if (currentStone.getRight() == leftEdge) {
+            leftEdge = computerPlayer->getPlayerPile().getStonesArray()[highestIndex].getLeft();
+            tablePile->addStone(computerPlayer->removeStone(highestIndex), Stone::Left);
+        }
+        else    // add to right
+        {
+            rightEdge = computerPlayer->getPlayerPile().getStonesArray()[highestIndex].getRight();
+            tablePile->addStone(computerPlayer->removeStone(highestIndex), Stone::Right);
+        }
+    cout << "Computer played: ";
+    currentStone.printOpen();
+    cout << "   Computers turn ends.\n";
 }
 
 
 void Game::humanTurn() {
+
     cout << "\nIt's your turn, \n" << humanPlayer->getPlayerName() << "!\n";
-    
+    cout << "This is your current board:\n";
+    printBoard();
     // No legal moves -> grab from bank if possible and pass turn.
     bool hasLegal = hasLegalMove(*humanPlayer);
     bool bankEmpty = bankPile->isEmpty();
@@ -224,14 +361,14 @@ void Game::humanTurn() {
             case 1: // Rotate & Place on Left
                 if (stoneLeft != stoneRight && stoneLeft == leftEdge)
                     humanPlayer->getPlayerPile().getStoneArrayPtr()[stoneIndex].rotateStone();
-                tablePile->addStone(humanPlayer->getPlayerPile().removeStone(stoneIndex), Stone::Left);
+                tablePile->addStone(humanPlayer->removeStone(stoneIndex), Stone::Left);
                 leftEdge = tablePile->getStonesArray()[0].getLeft();
                 
                 break;
-            case 2: // Rotate & Placce on Right
-                if (stoneLeft != stoneRight && stoneLeft == leftEdge)
+            case 2: // Rotate & Place on Right
+                if (stoneLeft != stoneRight && stoneRight == rightEdge)
                     humanPlayer->getPlayerPile().getStoneArrayPtr()[stoneIndex].rotateStone();
-                tablePile->addStone(humanPlayer->getPlayerPile().removeStone(stoneIndex), Stone::Right);
+                tablePile->addStone(humanPlayer->removeStone(stoneIndex), Stone::Right);
                 rightEdge = tablePile->getStonesArray()[tablePile->getPileSize() - 1].getRight();
                 
                 break;
@@ -240,23 +377,21 @@ void Game::humanTurn() {
     else{
         // Rotate stone if needed
         if (stoneLeft == leftEdge || stoneRight == rightEdge)
-            humanPlayer->getPlayerPile().getStonesArray()[stoneIndex].rotateStone();
+        {
+            humanPlayer->getPlayerPile().getStoneArrayPtr()[stoneIndex].rotateStone();
+            int temp = stoneLeft;
+            stoneLeft = stoneRight;
+            stoneRight = temp;
+        }
         // Play on the correct side
         if (stoneRight == leftEdge) {
-            tablePile->addStone(humanPlayer->getPlayerPile().removeStone(stoneIndex), Stone::Left);
+            tablePile->addStone(humanPlayer->removeStone(stoneIndex), Stone::Left);
             leftEdge = tablePile->getStonesArray()[0].getLeft();
         }
         else{
-            tablePile->addStone(humanPlayer->getPlayerPile().removeStone(stoneIndex), Stone::Right);
+            tablePile->addStone(humanPlayer->removeStone(stoneIndex), Stone::Right);
             rightEdge = tablePile->getStonesArray()[tablePile->getPileSize() - 1].getRight();
         }
     }
 }
 
-
-int main()
-{
-    Game* game = new Game("Harry");
-    game->runGame();
-
-}

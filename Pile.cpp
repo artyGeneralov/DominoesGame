@@ -96,7 +96,7 @@ void Pile::shufflePile(){
 
 Stone Pile::removeStone(int index){
     if (pileSize == 0 || index < 0 || index > pileSize){
-        cout << "Illegal removal request\n";
+        cout << "Illegal removal request: " << index<<"\n";
         exit(0);
     }
     Stone removed = Stone(stones_array[index].getLeft(), stones_array[index].getRight());

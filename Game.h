@@ -21,7 +21,7 @@ class Game{
         void computerTurn(); // manage the computers turn logic
 
         void humanTurn();   // handle the human turn i/o, legality of moves, etc..
-
+        void endGame();
     public:
         // C/D:
         Game(const char*);

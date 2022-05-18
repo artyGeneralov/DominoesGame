@@ -30,7 +30,7 @@ class Player
         void setName(const char*);
 
         // Actions:
-        const Stone removeStone(const int); // Removes stone by index.
+        Stone removeStone(const int); // Removes stone by index.
         void addStone(Stone); // Adds a Stone to (@playerPile)
 
 
