@@ -1,7 +1,3 @@
-#ifndef PILE_CPP
-#define PILE_CPP
-
-
 #include "Pile.h"
 #include "Stone.h"
 #include <cassert>
@@ -143,8 +139,10 @@ const void Pile::printOpen(){
 }
 
 const void Pile::printClosed(){
-    for(int i = 0; i < pileSize; i++)
+    for (int i = 0; i < pileSize; i++) {
         stones_array[i].printClosed();
+        cout << ", ";
+    }
 }
 
 // Misc:
@@ -160,6 +158,3 @@ Pile Pile::operator=(Pile p){
 bool Pile::isEmpty(){
     return pileSize == 0;
 }
-
-
-#endif

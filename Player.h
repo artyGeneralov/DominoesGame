@@ -20,10 +20,6 @@ class Player
         Player(const char*, bool); // Main Constructor (@name, @isHuman)
         ~Player(); // Destructor
 
-        // Actions:
-        const Stone removeStone(const int); // Romves stone by index.
-        void addStone(Stone); // Adds a Stone to (@playerPile)
-
         // Getters:
         const int getPileSize(){return this->pileSize;};
         char* getPlayerName();
@@ -31,7 +27,11 @@ class Player
 
         // Setters:
         void setName(const char*);
-        void setPile(Pile pile);
+
+        // Actions:
+        const Stone removeStone(const int); // Romves stone by index.
+        void addStone(Stone); // Adds a Stone to (@playerPile)
+
 
         // Printer:
         void printPile();

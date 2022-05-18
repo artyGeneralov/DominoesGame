@@ -1,5 +1,3 @@
-#ifndef PLAYER_CPP
-#define PLAYER_CPP
 
 #include "Player.h"
 #include "Pile.h"
@@ -8,7 +6,6 @@
 #include <string.h>
 using namespace std;
 // C/D:
-
 // Default Constructor, sets empty values to fields
 Player::Player(){
     name = new char[1];
@@ -47,6 +44,26 @@ Player::~Player(){
     if (playerPile != 0)
         delete(playerPile);
 }
+
+// Getters:
+Pile Player::getPlayerPile() {
+    Pile newPile(*playerPile);
+    return newPile;
+}
+
+char* Player::getPlayerName() {
+    char* s = new char[strlen(name)];
+    strcpy(s, name);
+    return s;
+}
+
+// Setters:
+void Player::setName(const char* name) {
+    this->name = new char[strlen(name)];
+    assert(this->name != 0);
+    strcpy(this->name, name);
+}
+
 // Actions:
 // Removes stone from playerPile by @index
 const Stone Player::removeStone(const int index){
@@ -61,39 +78,17 @@ void Player::addStone(Stone stoneToAdd){
     pileSize++;
 }
 
-// Getters:
-Pile Player::getPlayerPile(){
-    Pile newPile(*playerPile);
-    return newPile;
-}
-
-char* Player::getPlayerName(){
-    char* s = new char[strlen(name)];
-    strcpy(s, name);
-    return s;
-}
-// Setters:
-void Player::setName(const char* name) {
-    this->name = new char[strlen(name)];
-    assert(this->name != 0);
-    strcpy(this->name, name);
-}
 // Printer:
-
 void Player::printPile()
 {
     if (isHuman)
-            playerPile->printOpen();
+        playerPile->printOpen();
     else
-            playerPile->printClosed();
+        playerPile->printClosed();
 }
 
-void Player::setPile(Pile pile)
-{
 
-}
 // Misc:
-
 Player Player::operator=(Player pl){
     if(name != 0)
         delete[] name;
@@ -105,10 +100,3 @@ Player Player::operator=(Player pl){
     isHuman = pl.isHuman;
     return *this;
 }
-
-
-
-
-
-
-#endif

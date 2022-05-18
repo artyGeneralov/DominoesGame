@@ -1,6 +1,3 @@
-#ifndef STONE_CPP
-#define STONE_CPP
-
 #include "Stone.h"
 #include <iostream>
 using namespace std;
@@ -33,7 +30,7 @@ const void Stone::printOpen(){
 }
 
 const void Stone::printClosed(){
-    cout << "[][]";
+    cout << "[ ][ ]";
 }
 
 // Misc:
@@ -43,5 +40,3 @@ const bool Stone::compareStones(Stone s2){
     return  (right == s2.getRight() && left == s2.getLeft()) ||
             (left == s2.getRight() && right == s2.getLeft());
 }
-
-#endif
