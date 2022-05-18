@@ -5,27 +5,34 @@
 class Pile
 {
     private:
-        Stone* stones_array;
-        int pileSize;
+        Stone* stones_array; // stones in the pile
+        int pileSize; // corollates exactly to stones_array length
         const int MAX_PILE_SIZE = 28;
         
 
     public:
-        Pile();
-        Pile(const Pile&);
-        ~Pile() {delete[] stones_array;}
-        Stone stoneByIndex(int);
-        const void printOpen();
-        const void printClosed();
+        // C/D:
+        Pile();     // Default Constructor
+        Pile(const Pile&); // Copy Constructor
+        ~Pile() {delete[] stones_array;} // Destructor
+
+        // Actions:
+        void addStone(Stone, Stone::side);
         void fillPile();
         void shufflePile();
-        void addStone(Stone, Stone::side);
-        const int getPileSize(){return this->pileSize;}
-
-        bool isEmpty();
-        
-        Stone* getStonesArray();
         Stone removeStone(int);
+
+        // Getters:
+        const int getPileSize(){return this->pileSize;}
+        Stone stoneByIndex(int); // Return a stone by index
+        Stone* getStonesArray();
+
+        // Printers:
+        const void printOpen();
+        const void printClosed();
+
+        // Misc:
+        bool isEmpty();
         Pile operator=(Pile);
 };
 

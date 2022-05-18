@@ -5,35 +5,43 @@
 #include <iostream>
 using namespace std;
 
-
+// Constructor:
 Stone::Stone(int left, int right){
+    setStone(left, right);
+}
+
+
+// Setters:
+
+void Stone::setStone(int left, int right){
     this->left = left;
     this->right = right;
 }
 
-void Stone::rotateStone()
-{
-    int temp = this->right;
-    this->right = this->left;
-    this->left = temp;
+// Actions:
+void Stone::rotateStone(){
+    int temp = right;
+    right = left;
+    left = temp;
 }
 
-
-const bool Stone::compareStones(Stone s2)
-{
-    return  (this->right == s2.getRight() && this->left == s2.getLeft()) ||
-            (this->left == s2.getRight() && this->right == s2.getLeft());
-}
-
-const void Stone::printOpen()
-{
-    cout << "[" << this->getLeft() 
-    << "]["<<this->getRight() << "]";
+// Printers:
+const void Stone::printOpen(){
+    cout << "[" << getLeft() 
+ << "]["<<getRight() << "]";
 
 }
-const void Stone::printClosed()
-{
+
+const void Stone::printClosed(){
     cout << "[][]";
+}
+
+// Misc:
+
+// Returns true if both stones are equal on BOTH sides.
+const bool Stone::compareStones(Stone s2){
+    return  (right == s2.getRight() && left == s2.getLeft()) ||
+            (left == s2.getRight() && right == s2.getLeft());
 }
 
 #endif

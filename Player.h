@@ -7,29 +7,36 @@
 class Player
 {
     private:
+        const int STARTING_PILE_SIZE = 7;
         char* name;
-        int pileSize = STARTING_PILE_SIZE;
-        Pile* playerPile;
-        bool isHuman;
+        int pileSize; // Defaults at 0
+        Pile* playerPile; // Ptr to a Pile object
+        bool isHuman; // Human = true, Comp = false
 
     public:
-        const int STARTING_PILE_SIZE = 7;
-        Player() {
-            name = new char[0];
-            playerPile = new Pile();
-            pileSize = 0;
-            isHuman = true;
-        }
-        Player(const Player&); // copy constructor
-        Player(const char*, bool); // args (Name, isHuman)
-        ~Player() { delete[] name; delete[] playerPile; }
+        // C/D:
+        Player(); // Default Construcor
+        Player(const Player&); // Copy constructor
+        Player(const char*, bool); // Main Constructor (@name, @isHuman)
+        ~Player(); // Destructor
+
+        // Actions:
+        const Stone removeStone(const int); // Romves stone by index.
+        void addStone(Stone); // Adds a Stone to (@playerPile)
+
+        // Getters:
         const int getPileSize(){return this->pileSize;};
-        char* getPlayerName(){return this->name;};
-        void setName(const char*); // name
-        void setPile(Pile pile); // set Pile
-        const Stone removeStone(const int); // index
-        void addStone(Stone); // stoneToAdd
+        char* getPlayerName();
         Pile getPlayerPile();
+
+        // Setters:
+        void setName(const char*);
+        void setPile(Pile pile);
+
+        // Printer:
+        void printPile();
+
+        // Misc:
         Player operator=(Player pl);
 
         

@@ -3,17 +3,29 @@
 
 class Stone{
     private:
-        int right=-1, left=-1; 
+        int right, left; 
 
     public:
-        Stone() {}; // Empty Constructor
-        Stone(int, int);
+        // Constructors:
+        Stone() { right = -1; left = -1; }; // Default Constructor
+        Stone(int, int); // The standart constructor (@Left,@Right)
+
+        // Getters:
         int getRight(){return right;}
         int getLeft(){return left;}
+
+        // Setters:
+        void setStone(int, int);
+
+        // Actions:
         void rotateStone();
-        const bool compareStones(Stone s2);
+
+        // Printers:
         const void printOpen();
         const void printClosed();
+
+        // Misc:
+        const bool compareStones(Stone s2);
         enum side{Left = 0, Right};
 };
 #endif

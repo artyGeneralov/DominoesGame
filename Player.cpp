@@ -7,75 +7,108 @@
 #include <cassert>
 #include <string.h>
 using namespace std;
+// C/D:
 
-Player::Player(const char* name, bool isHuman)
-{
+// Default Constructor, sets empty values to fields
+Player::Player(){
+    name = new char[1];
+    playerPile = new Pile();
+    pileSize = 0;
+    isHuman = true;
+}
+
+// Copy Constructor
+// Takes data from const reference @player, Initializes 'this' as a copy of @player.
+Player::Player(const Player& player){
+    // copy name
+    name = new char[strlen(player.name) + 1];
+    assert(name != 0);
+    strcpy(name, player.name);
+    // copy pile size
+    pileSize = player.pileSize;
+    // copy pile
+    playerPile = new Pile(*player.playerPile);
+    // copy isHuman
+    isHuman = player.isHuman;
+}
+
+// Main Constructor. Initializes @name and @isHuman, and pile to empty
+Player::Player(const char* name, bool isHuman){
     this->isHuman = isHuman;
     setName(name);
+    playerPile = new Pile();
+    pileSize = 0;
 }
 
-Player::Player(const Player& player)
-{
-    // copy name
-    this->name = new char[strlen(player.name) + 1];
-    assert(name != 0);
-    strcpy(this->name, player.name);
-    // copy pile size
-    this->pileSize = player.pileSize;
-    // copy pile
-    this->playerPile = new Pile(*player.playerPile);
-    // copy isHuman
-    this->isHuman = player.isHuman;
+// Destructor
+Player::~Player(){
+    if (name != 0)
+        delete[] name;
+    if (playerPile != 0)
+        delete(playerPile);
 }
-
-void Player::setName(const char* name){
-    name = new char(strlen(name)+1);
-    assert(name != 0);
-    strcpy(this->name, name);
-    this->name[strlen(name)] = '\0';
-}
-
-
-const Stone Player::removeStone(const int index)
-{
+// Actions:
+// Removes stone from playerPile by @index
+const Stone Player::removeStone(const int index){
     Stone removedStone = playerPile->removeStone(index);
     this->pileSize--;
     return removedStone;
 }
 
-
-void Player::addStone(Stone stoneToAdd)
-{
+// Adds @stoneToAdd to playerPile
+void Player::addStone(Stone stoneToAdd){
     playerPile->addStone(stoneToAdd, Stone::Right);
     pileSize++;
 }
 
+// Getters:
+Pile Player::getPlayerPile(){
+    Pile newPile(*playerPile);
+    return newPile;
+}
 
-Player Player::operator=(Player pl)
+char* Player::getPlayerName(){
+    char* s = new char[strlen(name)];
+    strcpy(s, name);
+    return s;
+}
+// Setters:
+void Player::setName(const char* name) {
+    this->name = new char[strlen(name)];
+    assert(this->name != 0);
+    strcpy(this->name, name);
+}
+// Printer:
+
+void Player::printPile()
 {
+    if (isHuman)
+            playerPile->printOpen();
+    else
+            playerPile->printClosed();
+}
+
+void Player::setPile(Pile pile)
+{
+
+}
+// Misc:
+
+Player Player::operator=(Player pl){
     if(name != 0)
         delete[] name;
     name = new char[strlen(pl.name) + 1];
     assert(name != 0);
     strcpy(name, pl.name);
-
-    pileSize = pl.pileSize;
-    
+    pileSize = pl.pileSize; 
     playerPile = pl.playerPile;
     isHuman = pl.isHuman;
-
     return *this;
 }
 
-Pile Player::getPlayerPile()
-{
-    Pile newPile(*playerPile);
-    return newPile;
-}
 
-void Player::setPile(Pile pile)
-{
-    
-}
+
+
+
 
 #endif

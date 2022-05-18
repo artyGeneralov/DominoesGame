@@ -12,7 +12,7 @@ class Game{
 
         bool isOver();  // Check whether a victory or loss condition has been achieved
         bool hasLegalMove(Player); // Check if a player has legal moves
-        void startUpPlayerHand(Player); // Start up a hand with 7 cards
+        void startUpPlayerHand(Player&); // Start up a hand with 7 cards
 
     public:
         Game();
