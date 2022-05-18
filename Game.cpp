@@ -13,7 +13,7 @@ Game::Game(const char* humanName)
 {
     char* n = new char[strlen(humanName)];
     strcpy(n, humanName);
-    humanPlayer = new Player("HUMAN", true);
+    humanPlayer = new Player(n, true);
 
     computerPlayer = new Player("COMPUTER", false);
 
