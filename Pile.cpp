@@ -120,7 +120,8 @@ Stone Pile::stoneByIndex(int index){
         cout << "Wrong index!"<< endl;
         exit(0);
     }
-    return Stone(stones_array[index].getLeft(), stones_array[index].getRight());
+    //return Stone(stones_array[index].getLeft(), stones_array[index].getRight());
+    return stones_array[index];
 }
 
 Stone* Pile::getStonesArray(){
@@ -129,6 +130,11 @@ Stone* Pile::getStonesArray(){
         newStonesArr[i] = Stone(stones_array[i].getLeft(), stones_array[i].getRight());
     return newStonesArr;
 }
+
+Stone* Pile::getStoneArrayPtr() {
+    return stones_array;
+}
+
 // Printers:
 const void Pile::printOpen(){
     for(int i = 0; i < pileSize; i++){

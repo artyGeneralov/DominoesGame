@@ -46,9 +46,9 @@ Player::~Player(){
 }
 
 // Getters:
-Pile Player::getPlayerPile() {
-    Pile newPile(*playerPile);
-    return newPile;
+Pile& Player::getPlayerPile() {
+    //Pile newPile(*playerPile);
+    return *playerPile;
 }
 
 char* Player::getPlayerName() {
@@ -68,7 +68,7 @@ void Player::setName(const char* name) {
 // Removes stone from playerPile by @index
 const Stone Player::removeStone(const int index){
     Stone removedStone = playerPile->removeStone(index);
-    this->pileSize--;
+    pileSize--;
     return removedStone;
 }
 

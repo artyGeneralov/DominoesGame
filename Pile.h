@@ -26,6 +26,7 @@ class Pile
         const int getPileSize(){return this->pileSize;}
         Stone stoneByIndex(int); // Return a stone by index
         Stone* getStonesArray();
+        Stone* getStoneArrayPtr();
 
         // Printers:
         const void printOpen();

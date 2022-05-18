@@ -23,13 +23,14 @@ class Player
         // Getters:
         const int getPileSize(){return this->pileSize;};
         char* getPlayerName();
-        Pile getPlayerPile();
+        Pile& getPlayerPile();
+        
 
         // Setters:
         void setName(const char*);
 
         // Actions:
-        const Stone removeStone(const int); // Romves stone by index.
+        const Stone removeStone(const int); // Removes stone by index.
         void addStone(Stone); // Adds a Stone to (@playerPile)
 
 
