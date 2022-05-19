@@ -1,3 +1,10 @@
+/* 
+* Authors:
+* Artiom Generalov 319525671
+* Itamar Abir 208273169
+*/
+
+
 #include "Pile.h"
 #include "Game.h"
 #include "Player.h"
@@ -5,6 +12,8 @@
 #include <time.h>
 #include <stdlib.h>
 using namespace std;
+
+
 
 // C/D:
 
@@ -117,6 +126,8 @@ void Game::runGame()
 
     // Calculate points, declare winner
     endGame();
+    cout << "\n Press enter to end\n";
+    cin.ignore();
 }
 
 
